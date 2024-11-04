@@ -1,0 +1,9 @@
+Erläuterung zu den Dateien:
+- klassisch:
+	Eine Klasse, die die Beispieleingaben in java einliest. Es existiert außerdem die Funktion "aufgabenLoesen", hier kannst du deinen Programmcode schreiben.
+- OOP:
+	Eine Klasse für BlueJ. Sie hat die gleiche Funktionalität wir "klassisch" inklusive der Funktion "aufgabenLoesen".
+- direkt:
+	Diese Klasse liest nicht aus einer Datei ein, sondern nimmt direkte Eingaben entsprechend der Aufgabenstellung von der Standardeingabe entgegen. Diese Eingaben müssen also aktiv eingetippt werden.
+
+- SimpleInput ist optional nutzbar. Die Klasse ermöglicht die Eingabe des Pfadnamens über ein separates Fenster.

@@ -1,0 +1,1 @@
+Das Feld muss in 6 Spalten and 4 Zeilen aufgeteilt werden.

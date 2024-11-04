@@ -1,0 +1,55 @@
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+garten0.txt
+Vorgeschlagene Aufteilung für 23 Kleingärten:
+Feldgröße: 117.775593 m²
+	Feldbreite: 12.432813 m
+	Feldhöhe: 9.472964 m
+Anzahl der Felder: 23
+	Vertikale Aufteilung: 4.433670 Felder
+	Horizontale Aufteilung: 5.308533 Felder
+
+Wunschanzahl der Interessenten: 23
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+garten1.txt
+Vorgeschlagene Aufteilung für 19 Kleingärten:
+Feldgröße: 9.312417 m²
+	Feldbreite: 2.908779 m
+	Feldhöhe: 3.201487 m
+Anzahl der Felder: 19
+	Vertikale Aufteilung: 4.685323 Felder
+	Horizontale Aufteilung: 4.125443 Felder
+
+Wunschanzahl der Interessenten: 19
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+garten2.txt
+Vorgeschlagene Aufteilung für 36 Kleingärten:
+Feldgröße: 109.674344 m²
+	Feldbreite: 11.512007 m
+	Feldhöhe: 9.526953 m
+Anzahl der Felder: 38
+	Vertikale Aufteilung: 5.773095 Felder
+	Horizontale Aufteilung: 6.688669 Felder
+
+Wunschanzahl der Interessenten: 36
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+garten3.txt
+Vorgeschlagene Aufteilung für 101 Kleingärten:
+Feldgröße: 2.141784 m²
+	Feldbreite: 1.463484 m
+	Feldhöhe: 1.463484 m
+Anzahl der Felder: 105
+	Vertikale Aufteilung: 10.249518 Felder
+	Horizontale Aufteilung: 10.249518 Felder
+
+Wunschanzahl der Interessenten: 101
+ -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+garten4.txt
+Vorgeschlagene Aufteilung für 1200 Kleingärten:
+Feldgröße: 56.218616 m²
+	Feldbreite: 15.357045 m
+	Feldhöhe: 3.660770 m
+Anzahl der Felder: 1316
+	Vertikale Aufteilung: 10.107162 Felder
+	Horizontale Aufteilung: 130.233389 Felder
+
+Wunschanzahl der Interessenten: 1200

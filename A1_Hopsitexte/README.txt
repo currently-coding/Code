@@ -1,0 +1,1 @@
+Für diese Aufgabe sind keine Eingaben vorhanden. Zur Inspiration kannst du die Eingaben der Junioraufgabe Texthopsen verwenden.
