@@ -1,5 +1,5 @@
-from pprint import pprint  # Added to use pprint for pretty printing
-from collections import deque
+from os import wait
+from datetime import datetime
 
 
 def read_file(path):
@@ -7,7 +7,6 @@ def read_file(path):
         lines = f.readlines()
     periods = [int(period.strip()) for period in lines[1:]]
 
-    print(periods)
     return periods
 
 
@@ -17,7 +16,7 @@ class Maze:
         self.minute = 0
         self.cube: list[bool] = [False] * len(self.periods)
         self.persons: list[bool] = [False] * len(self.periods)
-        self.path = {}
+        self.path = {}  # {(pos, min): pos}
 
     def update(self):
         """
@@ -35,9 +34,12 @@ class Maze:
 
     def move(self):
         while not self.persons[-1]:
+            # self.path[self.minute] = []
             if not self.update():
+                self.path[self.minute] = []
                 continue
             self.path[self.minute] = []
+            tmp = []
             for position, _ in enumerate(self.persons):
                 if self.dead(position):
                     self.persons[position] = False
@@ -47,19 +49,17 @@ class Maze:
                 if position == 0 and self.cube[position]:
                     if not self.persons[0]:
                         self.persons[position] = True
-                        self.path[self.minute].append((0, 1))
+                    tmp.append((0, 1))
                 if self.person_at(position - 1):
                     for index in range(position, self.moving(position, 1)):
                         self.persons[index] = True
-                        self.path[self.minute].append((position, index + 1))
+                        tmp.append((index, index + 1))
                 elif self.person_at(position + 1):
                     for index in range(position, self.moving(position, -1), -1):
                         self.persons[index] = True
-                        self.path[self.minute].append((position, index + 1))
-
-        print("\n*" * 2)
-        print(f"Person reached the end after {self.minute} Minutes.")
-        print("\n*" * 2)
+                        tmp.append((index, index + 1))
+            tmp = list(set(tmp))
+            self.path[self.minute].append(tmp)
 
     def dead(self, position):
         return (not self.cube[position]) and self.persons[position]
@@ -76,51 +76,74 @@ class Maze:
         else:
             return False
 
-    def calc_path(self):
+    def trace_path(self):
         start = 0
         end = len(self.cube)
-        path_dict = self.path
-        result = []
+        current = end
+        minute = self.minute
+        path = {}
+        while current != start and minute > -1:
+            pathb = []
+            if len(self.path[minute]) > 0:
+                pathb = self.path[minute][0]
+            path[minute] = []
+            for _ in pathb:
+                for pair in pathb:
+                    if pair[1] == current:
+                        current = pair[0]
+                        path[minute].append((pair[1], pair[0]))
+            minute -= 1
+        self.path = path
 
-        # Queue holds (current_section, path_so_far)
-        queue = deque([(start, [])])
-        visited = set()  # To track visited sections
+    def calc_path(self):
+        self.path = {key: value for key, value in self.path.items() if value}
+        current_sector = 0
+        path_result = [0]
+        duration_result = []
+        end = len(self.cube)
+        last = 0
 
-        while queue:
-            current_section, path = queue.popleft()
+        # We will trace from sector 0 and find the transitions
+        while current_sector != end:
+            for key, transitions in self.path.items():
+                for next_sec, prev in transitions:
+                    if prev == current_sector:
+                        path_result.append(next_sec)
+                        duration_result.append(
+                            key - last
+                        )  # The current key represents the time spent in the sector
+                        current_sector = next_sec
+                        last = key
+                        break
+        self.path = [path_result, duration_result]
 
-            # If we reach the end section, return the path
-            if current_section == end:
-                result = []
-                for step in path:
-                    waiting_time = step[1] - step[0]
-                    result.append(
-                        f"Warte {waiting_time} Minuten, Gehe von Abschnitt {
-                            step[0]} in Abschnitt {step[1]}."
-                    )
-                return "\n".join(result)
-
-            # Mark the section as visited
-            visited.add(current_section)
-
-            # Traverse all neighbors
-            for next_section, pairs in path_dict.items():
-                for pair in pairs:
-                    if pair[0] == current_section and pair[1] not in visited:
-                        # Add to path and queue
-                        queue.append((pair[1], path + [pair]))
-
-        return result
+    def instructions(self):
+        total_time = 0
+        for idx in range(len(self.path[0]) - 1):
+            total_time += self.path[1][idx]
+            print(
+                f"Warte {self.path[1][idx]} Minuten in Abschnitt  {self.path[0][idx]}, gehe dann in Abschnitt {self.path[0][idx+1]}"
+            )
+        print("Total time: ", self.minute)
+        print("Total path time: ", total_time)
+        print("Difference: ", self.minute - total_time)
 
     def output(self):
-        pprint(self.cube)
-        pprint(self.persons)
-        print(self.calc_path())
-        print("The end")
+        self.trace_path()
+        self.calc_path()
+        self.instructions()
 
     def solve(self):
+        print("Solving Maze...")
+        n1 = datetime.now()
         self.move()
+        n2 = datetime.now()
+        print(f"\nMaze completed after {n2-n1}s. Calculating path...\n")
+        n3 = datetime.now()
         self.output()
+        n4 = datetime.now()
+        print(f"\nFinished path calculation in {n4-n3}s.\n")
+        print("Total execution time: ", n4 - n1, "s")
 
 
-maze = Maze("grabmal3.txt").solve()
+maze = Maze("grabmal5.txt").solve()

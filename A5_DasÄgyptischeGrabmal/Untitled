@@ -1,0 +1,16 @@
+Solving Maze...
+
+Maze completed after 0:00:00.267531s. Calculating path...
+
+Warte 280012 Minuten in Abschnitt  0, gehe dann in Abschnitt 1
+Warte 140006 Minuten in Abschnitt  1, gehe dann in Abschnitt 2
+Warte 70003 Minuten in Abschnitt  2, gehe dann in Abschnitt 3
+Warte 0 Minuten in Abschnitt  3, gehe dann in Abschnitt 4
+Warte 0 Minuten in Abschnitt  4, gehe dann in Abschnitt 5
+Total time:  490021
+Total path time:  490021
+Difference:  0
+
+Finished path calculation in 0:00:00.091831s.
+
+Total execution time:  0:00:00.359379 s

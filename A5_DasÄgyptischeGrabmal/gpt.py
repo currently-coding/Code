@@ -1,89 +1,98 @@
-from pprint import pprint  # Added to use pprint for pretty printing
+from pprint import pprint  # For pretty printing
 
 
 def read_file(path):
-    print("Reading from")
     with open(path, "r") as f:
         lines = f.readlines()
     periods = [int(period.strip()) for period in lines[1:]]
-
     print(periods)
     return periods
 
 
 class Maze:
-    def __init__(self, path) -> None:
-        self.periods = [period for period in read_file(path)]
+    def __init__(self, path: str) -> None:
+        self.periods = read_file(path)
         self.minute = 0
-        self.cube = [False] * len(self.periods)
-        self.persons = [False] * len(self.periods)
-        self.path = []
+        self.cube: list[bool] = [False] * len(self.periods)
+        self.persons: list[bool] = [False] * len(self.periods)
+        self.path = {}  # {(minute): [(start_pos, end_pos), ...]}
 
     def update(self):
-        """
-        call every move to simulate the movements of the Maze
-        """
+        """Simulate cube state changes per minute."""
         self.minute += 1
-        change = False  # if nothing has changed dont bother calculating possible moves
-        for i, _ in enumerate(self.periods):
-            period = self.periods[i]
+        change = False
+        for i, period in enumerate(self.periods):
             if (self.minute % period) == 0:
                 self.cube[i] = not self.cube[i]
                 change = True
         return change
 
     def move(self):
-        while not self.persons[-1]:  # Continue until the last person reaches the end
+        while not self.persons[-1]:  # Continue until the last position is reached
+            self.path[self.minute] = []
             if not self.update():
-                continue  # Skip if there are no updates
-
-            # Track the last occupied position to optimize movement
-            last_occupied = -1
+                continue
 
             for position in range(len(self.persons)):
-                # Skip if the current position is closed and no one is present
-                if not (self.persons[position] or self.cube[position]):
+                if self.dead(position):
+                    self.persons[position] = False
                     continue
 
-                # Spawn a new person at position 0 if it is open and unoccupied
-                if position == 0 and self.cube[position] and not self.persons[0]:
-                    self.persons[position] = True
+                # Movement logic
+                if self.person_at(position - 1) and not self.cube[position]:
+                    new_pos = self.moving(position, 1)
+                    for idx in range(position, new_pos):
+                        self.persons[idx] = True
+                        self.path[self.minute].append((position, idx + 1))
 
-                # If a person is present at the current position
-                if self.persons[position]:
-                    # Check if they are dead
-                    if self.dead(position):
-                        self.persons[position] = False  # Remove if dead
-                        continue  # Skip to next position
+                elif self.person_at(position + 1) and not self.cube[position]:
+                    new_pos = self.moving(position, -1)
+                    for idx in range(position, new_pos, -1):
+                        self.persons[idx] = True
+                        self.path[self.minute].append((position, idx - 1))
 
-                    # Move to the current position if the previous is occupied
-                    if position > 0 and self.persons[position - 1]:
-                        self.persons[position] = True
-
-                    # Update the last occupied position
-                    last_occupied = position
-
-            # Move all persons forward from the last occupied position
-            if last_occupied != -1:  # Check if there was any occupied position
-                for move_position in range(last_occupied + 1, len(self.cube)):
-                    if not self.cube[move_position]:  # Stop if the next cube is closed
-                        break
-                    if self.persons[move_position]:  # If the next position is occupied
-                        for idx in range(last_occupied + 1, move_position):
-                            self.persons[idx] = True  # Move all persons in between
-
-            pprint(self.persons)
+        print("\n**")
+        print(f"Person reached the end after {self.minute} minutes.")
+        print("**\n")
 
     def dead(self, position):
-        return not self.cube[position]  # True = not dead -> return False
+        return not self.cube[position] and self.persons[position]
+
+    def moving(self, position, direction):
+        """Find the next valid position in a direction."""
+        current = position
+        while 0 <= current < len(self.cube) and self.cube[current]:
+            current += direction
+        return current
+
+    def person_at(self, position):
+        """Check if there is a person at a position."""
+        return 0 <= position < len(self.persons) and self.persons[position]
 
     def calc_path(self):
-        pass
+        tracked_path = []
+        end_pos = len(self.cube) - 1
+        current_pos = end_pos
+        current_min = self.minute
+
+        while current_pos != 0:
+            tracked_path.append((current_pos, current_min))
+            current_min -= 1
+            for start, end in self.path.get(current_min, []):
+                if end == current_pos:
+                    current_pos = start
+                    break
+
+        tracked_path.reverse()
+        pprint(tracked_path)
+        return tracked_path
 
     def output(self):
         pprint(self.cube)
         pprint(self.persons)
-        self.calc_path()
+        tracked_path = self.calc_path()
+        pprint(self.path)
+        print("Tracked Path:", tracked_path)
         print("The end")
 
     def solve(self):
@@ -91,4 +100,4 @@ class Maze:
         self.output()
 
 
-maze = Maze("grabmal2.txt").solve()
+maze = Maze("grabmal0.txt").solve()
